@@ -5,7 +5,9 @@ var descriptionContainer = document.getElementById("quizDescriptionContainer")
 var questionContainer = document.getElementById("questionContainer");
 var possibleAnswersContainer = document.getElementById("possibleAnswersContainer");
 var validationContainer = document.getElementById("validationContainer");
+var highScoreContainer  = document.getElementById("highScoreContainer");
 var timeLeft = 60;
+var timeInterval = 1000;
 var currentQuestionIndex = 0;
 
 
@@ -44,14 +46,11 @@ var questionArray = [
 
   function startTimer() {
     var timeInterval = setInterval(function () {
-      if (timeLeft > 1) {
+      if (timeLeft >= 1) {
         timeRemainigEl.textContent = 'Time: ' + timeLeft + ' seconds remaining';
-        timeLeft--;
-      } else if (timeLeft === 1) {
-        timeRemainigEl.textContent = 'Time: ' + timeLeft + ' second remaining';
-        timeLeft--;
+         timeLeft--;
       } else {
-        timeRemainigEl.textContent = '';
+        timeRemainigEl.textContent = 'Time is up!';
         clearInterval(timeInterval);
       }
     }, 1000);
@@ -62,8 +61,7 @@ var questionArray = [
     questionContainer.removeAttribute('class');
     //  get current question object from array
     var currentQuestion = questionArray[currentQuestionIndex];
-
-    // var question = document.getElementById('questionContainer');
+    // update the questionContainer with the current question
     questionContainer.textContent = currentQuestion.question;
 
     possibleAnswersContainer.removeAttribute('class');
@@ -73,8 +71,6 @@ var questionArray = [
         var button = document.createElement('button');
         button.textContent = currentQuestion.possibleAnswers[i]
         button.setAttribute('data-value', currentQuestion.correctAnswer)
-        // console.log(button.textContent);
-        // console.log(button.getAttribute('data-value'));
         button.addEventListener('click', function() {
         // Get the value from the data attribute
             var correctAnswer = button.getAttribute('data-value');
@@ -88,21 +84,25 @@ var questionArray = [
     }
 }
 
-function validateAnswer(userAnswer, correctAnswer) {
+function checkTimer() {
+    if (timeLeft <= 0) {
+      timeRemainigEl.textContent = '';
+      clearInterval(timeInterval);
+      console.log('Time is up!');
+      timeLeft = 0;
+      recordResults(timeLeft);
+    }
+  }
 
-    console.log(userAnswer);
-    console.log(correctAnswer);
+function validateAnswer(userAnswer, correctAnswer) {
 
     if (userAnswer === correctAnswer) {
       var outcome = 'Correct!';
-    //   questionContainer.appendChild(validationContainer)
     } else {
       var outcome = 'Incorrect';
-    //   questionContainer.appendChild(validationContainer);
       timeLeft -= 15;
     }
 
-    // questionContainer.appendChild(validationContainer)
     validationContainer.textContent = outcome;
     questionContainer.appendChild(validationContainer);
     
@@ -113,16 +113,55 @@ function validateAnswer(userAnswer, correctAnswer) {
     if (timeLeft > 0 && currentQuestionIndex < questionArray.length) {
       displayQuestion();
     } else {
-      displayResults();
+      timeleft = 0;
+      recordResults(timeLeft);
     }
 }
     
-function displayResults() {
-        console.log(timeLeft);
-        console.log(currentQuestionIndex);
-    }
+function recordResults(timeLeft) {
+  // prompt user for name or intials
+  var userInitials = prompt("Please enter your name or initials:");
 
-  function startQuiz() {
+  // retrieve high scores from local storage or set to empty array
+  var highScores = JSON.parse(localStorage.getItem('highScoreJSON')) || [];
+  
+  // create a new object to hold the user's name and score
+  var newScore = {
+          name: userInitials,
+          score: timeLeft
+    }
+  
+  // add the new score to the high scores array
+  highScores.push(newScore);
+
+  // store the high scores array in local storage
+    localStorage.setItem('highScoreJSON', JSON.stringify(highScores));
+  
+  // display the high scores
+  displayScores();
+  }
+
+function displayScores() {
+  // set the class of the descriptionContainer and questionContainer to hide
+  descriptionContainer.setAttribute('class', 'hide');
+  questionContainer.setAttribute('class', 'hide');
+
+  // remove class hide from highScoreContainer
+  highScoreContainer.removeAttribute('class');
+
+  // get the high scores from local storage
+  var highScores = JSON.parse(localStorage.getItem('highScoreJSON')) || [];
+
+  // loop through the high scores and display them
+  for (var i = 0; i < highScores.length; i++) {
+    var li = document.createElement('li');
+    li.textContent = highScores[i].name + ' - ' + highScores[i].score;
+    highScoreContainer.appendChild(li);
+  }
+
+};
+
+function startQuiz() {
     descriptionContainer.setAttribute('class', 'hide');
     // questionContainer.removeAttribute('class');
     startTimer();
