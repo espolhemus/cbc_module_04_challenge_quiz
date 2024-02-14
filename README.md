@@ -12,7 +12,7 @@ Not applicable.
 
 The result of this submission is an HTML page deployed via GitHub Pages, with the underlying code being uploaded within this repository.
 
-The HTML page can be found at: (https://espolhemus.github.io/cbc_module_04_challenge_quiz/)
+The HTML page can be found at: https://espolhemus.github.io/cbc_module_04_challenge_quiz/
 
 An image of the completed HTML page is as follows:
 
