@@ -12,11 +12,11 @@ Not applicable.
 
 The result of this submission is an HTML page deployed via GitHub Pages, with the underlying code being uploaded within this repository.
 
-The HTML page can be found at: [https://espolhemus.github.io/cbc_module_04_challenge_quiz/]
+The HTML page can be found at: (https://espolhemus.github.io/cbc_module_04_challenge_quiz/)
 
 An image of the completed HTML page is as follows:
 
-![Final HTML Page](/assets/images/finished_HTML_screenshot_20240207.png)
+![Final HTML Page](/assets/images/finished_HTML_screenshot_20240214.png)
 
 An image of the contents of the respository is as follows:
 
